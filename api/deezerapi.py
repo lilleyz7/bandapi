@@ -36,8 +36,8 @@ class DeezerController:
             return e
 
     def get_artist_albums(self, artist_id):
-        #url = f"{self.base_url}artist/{artist_id}/albums"
-        url = f"https://api.deezer.com/artist/{artist_id}/albums"
+        url = f"{self.base_url}artist/{artist_id}/albums"
+        #url = f"https://api.deezer.com/artist/{artist_id}/albums"
         try:
             response = requests.get(url, headers=self.headers)
             if response.status_code == 200:
@@ -45,9 +45,19 @@ class DeezerController:
                 print(albums)
                 full_length_albums = []
                 for album in albums:
-                    if "Deluxe" not in album['title'] and \
-                    "Remaster" not in album['title'] and \
-                    "Re-release" not in album['title']:
+                    title = album['title'].lower()
+                    if "deluxe" not in title and \
+                    "remaster" not in title and \
+                    "re-release" not in title and \
+                    "alternate" not in title and \
+                    "edition" not in title and \
+                    "live" not in title and \
+                    "(live)" not in title and \
+                    "instrumental" not in title and \
+                    "compilation" not in title and \
+                    "greatest hits" not in title and \
+                    "anthology" not in title and \
+                    album['record_type'] == 'album':
                         if album['record_type'] == 'album':  # Filter only full-length albums
                             full_length_albums.append({
                                 'id': album['id'],
@@ -73,7 +83,7 @@ class DeezerController:
                 for song in songs:
                     filtered_songs.append({
                         'id': song['id'],
-                        'name': song['title'],
+                        'title': song['title'],
                         'run_ti me': song['duration']  # In seconds
                     })
                 return filtered_songs

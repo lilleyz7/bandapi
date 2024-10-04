@@ -2,7 +2,7 @@ from deezerapi import DeezerController
 
 def test_api():
     controller = DeezerController()
-    test_names = ["windir", "enslaved", "monolord"]
+    test_names = ["windir", "death", "monolord"]
     total_errors = 0
     mishaps = 0
     artists = []
@@ -37,7 +37,26 @@ def test_api():
             print("-----------------------------------------")
         elif isinstance(response, list):
             for a in response:
-                print(a)
+                print(a['title'])
+                albums.append(a['id']) 
+            print("-----------------------------------------")
+        else:
+            print("how did we get here")
+    
+    for album_id in albums:
+        response = controller.get_album_songs(album_id)
+        if isinstance(response, str):
+            mishaps += 1
+            print(f"{name} had a mishap and received: {response}\n\n")
+            print("-----------------------------------------")
+        elif isinstance(response, Exception):
+            total_errors += 1
+            print(f"{name} failed and received: {response}\n\n")
+            print("-----------------------------------------")
+        elif isinstance(response, list):
+            for song in response:
+                print(song['title'])
+                songs.append(song['id']) 
             print("-----------------------------------------")
         else:
             print("how did we get here")
