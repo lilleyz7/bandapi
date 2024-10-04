@@ -1,10 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
 
 class Artist(models.Model):
     id = models.IntegerField(null=False)
-    name = models.CharField(max_length=50)
     num_albums = models.IntegerField(null=False)
+    name = models.CharField(max_length=50)
     picture = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -30,6 +29,7 @@ class Album(models.Model):
     
 class Song(models.Model):
     id = models.IntegerField(null=False)
+    run_time = models.IntegerField(null=True)
     title = models.CharField(max_length=50)
     album = models.ForeignKey(Album, related_name='songs', on_delete=models.CASCADE)
 
