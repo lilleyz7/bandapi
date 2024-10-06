@@ -42,7 +42,6 @@ class DeezerController:
             response = requests.get(url, headers=self.headers)
             if response.status_code == 200:
                 albums = response.json()['data']
-                print(albums)
                 full_length_albums = []
                 for album in albums:
                     title = album['title'].lower()
