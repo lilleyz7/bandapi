@@ -5,7 +5,14 @@ from .models import Artist, Album
 from .deezerapi import DeezerController
 from .serializers import ArtistSerializer
 
-@api_view(['GET', 'POST'])
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication , SessionAuthentication])
+@permission_classes([IsAuthenticated])
 def artist_details(request, artist_name):
     try:
         artist = Artist.objects.get(name__iexact=artist_name)
@@ -55,10 +62,11 @@ def artist_details(request, artist_name):
                     else:
                         return Response({
                             'error': serializer.errors}
+                          
                             )
                 except Exception as e:
                     print(e)
-                    return Response(ErrorResponse(e).to_json())
+                    return Response({'error': str(e)})
         except Exception as e:
             print(e)
             return Response(
